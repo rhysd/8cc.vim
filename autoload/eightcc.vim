@@ -83,8 +83,8 @@ function s:run_vimscript(lines, debug) abort
     if a:debug | let g:eightcc#__debug.script = f | endif
     try
         execute 'source' f
-        let c = CreateCompiler()
-        call c.run()
+        let vm = SetupVM()
+        call vm.run()
     finally
         if !a:debug | call delete(f) | endif
     endtry

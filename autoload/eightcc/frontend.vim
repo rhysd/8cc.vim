@@ -1,5 +1,5 @@
 let s:c = {}
-function! s:c.init(config) dict
+function! s:c.init(config) dict abort
  let self.input_type = has_key(a:config, 'input_type') ? a:config.input_type : 'getchar'
  let self.output_type = has_key(a:config, 'output_type') ? a:config.output_type : 'echo'
  let self.a = 0
@@ -9861,7 +9861,7 @@ function! s:c.init(config) dict
 endfunction
 
 
-function! s:c.phase0() dict
+function! s:c.phase0() dict abort
  while 0 <= self.pc && self.pc < 512
   if 0
 
@@ -20115,7 +20115,7 @@ function! s:c.phase0() dict
  endwhile
 endfunction
 
-function! s:c.phase1() dict
+function! s:c.phase1() dict abort
  while 512 <= self.pc && self.pc < 1024
   if 0
 
@@ -28334,7 +28334,7 @@ function! s:c.phase1() dict
  endwhile
 endfunction
 
-function! s:c.phase2() dict
+function! s:c.phase2() dict abort
  while 1024 <= self.pc && self.pc < 1536
   if 0
 
@@ -36917,7 +36917,7 @@ function! s:c.phase2() dict
  endwhile
 endfunction
 
-function! s:c.phase3() dict
+function! s:c.phase3() dict abort
  while 1536 <= self.pc && self.pc < 2048
   if 0
 
@@ -44853,7 +44853,7 @@ function! s:c.phase3() dict
  endwhile
 endfunction
 
-function! s:c.phase4() dict
+function! s:c.phase4() dict abort
  while 2048 <= self.pc && self.pc < 2560
   if 0
 
@@ -53205,7 +53205,7 @@ function! s:c.phase4() dict
  endwhile
 endfunction
 
-function! s:c.phase5() dict
+function! s:c.phase5() dict abort
  while 2560 <= self.pc && self.pc < 3072
   if 0
 
@@ -59384,7 +59384,7 @@ function! s:c.phase5() dict
  endwhile
 endfunction
 
-function! s:c.phase6() dict
+function! s:c.phase6() dict abort
  while 3072 <= self.pc && self.pc < 3584
   if 0
 
@@ -67357,7 +67357,7 @@ function! s:c.phase6() dict
  endwhile
 endfunction
 
-function! s:c.phase7() dict
+function! s:c.phase7() dict abort
  while 3584 <= self.pc && self.pc < 4096
   if 0
 
@@ -75385,7 +75385,7 @@ function! s:c.phase7() dict
  endwhile
 endfunction
 
-function! s:c.phase8() dict
+function! s:c.phase8() dict abort
  while 4096 <= self.pc && self.pc < 4608
   if 0
 
@@ -83079,7 +83079,7 @@ function! s:c.phase8() dict
  endwhile
 endfunction
 
-function! s:c.phase9() dict
+function! s:c.phase9() dict abort
  while 4608 <= self.pc && self.pc < 5120
   if 0
 
@@ -88491,7 +88491,7 @@ function! s:c.phase9() dict
  endwhile
 endfunction
 
-function! s:c.phase10() dict
+function! s:c.phase10() dict abort
  while 5120 <= self.pc && self.pc < 5632
   if 0
 
@@ -95909,7 +95909,7 @@ function! s:c.phase10() dict
  endwhile
 endfunction
 
-function! s:c.phase11() dict
+function! s:c.phase11() dict abort
  while 5632 <= self.pc && self.pc < 6144
   if 0
 
@@ -102966,7 +102966,7 @@ function! s:c.phase11() dict
  endwhile
 endfunction
 
-function! s:c.phase12() dict
+function! s:c.phase12() dict abort
  while 6144 <= self.pc && self.pc < 6656
   if 0
 
@@ -110508,7 +110508,7 @@ function! s:c.phase12() dict
  endwhile
 endfunction
 
-function! s:c.phase13() dict
+function! s:c.phase13() dict abort
  while 6656 <= self.pc && self.pc < 7168
   if 0
 
@@ -118248,7 +118248,7 @@ function! s:c.phase13() dict
  endwhile
 endfunction
 
-function! s:c.phase14() dict
+function! s:c.phase14() dict abort
  while 7168 <= self.pc && self.pc < 7680
   if 0
 
@@ -125901,7 +125901,7 @@ function! s:c.phase14() dict
  endwhile
 endfunction
 
-function! s:c.phase15() dict
+function! s:c.phase15() dict abort
  while 7680 <= self.pc && self.pc < 8192
   if 0
 
@@ -127685,7 +127685,7 @@ function! s:c.phase15() dict
  endwhile
 endfunction
 
-function! s:c.run(...) dict
+function! s:c.run(...) dict abort
  call self.init(a:0 > 0 ? a:1 : {})
  while 1
   if 0
@@ -127741,6 +127741,6 @@ function! s:c.run(...) dict
  endwhile
 endfunction
 
-function! eightcc#frontend#create()
+function! eightcc#frontend#create() abort
  return deepcopy(s:c)
 endfunction
