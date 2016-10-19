@@ -1,14 +1,5 @@
 function! s:read_file(file) abort
-    let opts = a:0 > 0 ? a:1 : {}
-
-    try
-        let saved_bin = &binary
-        set binary
-        let lines = readfile(a:file, 'b')
-    finally
-        let &binary = saved_bin
-    endtry
-
+    let lines = readfile(a:file, 'b')
     return map(split(join(lines, "\n"), '\zs'), 'char2nr(v:val)')
 endfunction
 
