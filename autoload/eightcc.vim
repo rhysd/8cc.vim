@@ -61,7 +61,7 @@ function! eightcc#compile(...) abort
     if debug | let g:eightcc#__debug.frontend = frontend | endif
     if verbose | echo 'Compiling EIR into Vim script...' | endif
 
-    let target = has_key(a:config, 'target') ? a:config.target : 'vim'
+    let target = has_key(opts, 'target') ? opts.target : 'vim'
     let input = map(split(target . "\n", '\zs'), 'char2nr(v:val)') + frontend.output
 
     let backend = eightcc#backend#create()
@@ -86,15 +86,16 @@ function! eightcc#compile(...) abort
     return backend
 endfunction
 
-function s:run_vimscript(lines) abort
+function s:run_vimscript(lines, debug) abort
     let f = tempname()
     call writefile(a:lines, f, 'b')
+    if a:debug | let g:eightcc#__debug.script = f | endif
     try
         execute 'source' f
         let c = CreateCompiler()
         call c.run()
     finally
-        call delete(f)
+        if !a:debug | call delete(f) | endif
     endtry
 endfunction
 
@@ -107,5 +108,6 @@ function! eightcc#run(...) abort
 
     let verbose = has_key(opts, 'verbose') && opts.verbose
     if verbose | echo 'Running generated Vim script...' | endif
-    call s:run_vimscript(result.lines)
+    call s:run_vimscript(result.lines, has_key(opts, '__debug'))
 endfunction
+
