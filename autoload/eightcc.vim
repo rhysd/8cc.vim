@@ -38,17 +38,47 @@ function! eightcc#compile(...) abort
     let input = map(split(target . "\n", '\zs'), 'char2nr(v:val)') + frontend.output
 
     let backend = eightcc#backend#create()
-    let started = reltime()
-    call backend.run({
-        \ 'input_type': 'direct',
-        \ 'input': input,
-        \ 'output_type': opts.output_type,
-        \ })
-    let spent = reltimestr(reltime(started, reltime()))
+    try
+        let saved_bin = &binary
+        set binary
+        let started = reltime()
+        call backend.run({
+            \ 'input_type': 'direct',
+            \ 'input': input,
+            \ 'output_type': opts.output_type,
+            \ })
+        let spent = reltimestr(reltime(started, reltime()))
+    finally
+        let &binary = saved_bin
+    endtry
 
     if verbose | echo 'Compiling EIR into Vim script: Success: ' . spent . 's' | endif
     if debug | let g:eightcc#__debug.spent_on_backend =  spent | endif
     if debug | let g:eightcc#__debug.backend = backend | endif
 
-    return backend.output
+    return backend
+endfunction
+
+function s:run_vimscript(lines) abort
+    let f = tempname()
+    call writefile(a:lines, f, 'b')
+    try
+        execute 'source' f
+        let c = CreateCompiler()
+        call c.run()
+    finally
+        call delete(f)
+    endtry
+endfunction
+
+function! eightcc#run(...) abort
+    let opts = a:0 > 0 ? a:1 : {}
+    let result = eightcc#compile(extend(opts, {'output_type': 'direct'}))
+    if !has_key(result, 'lines')
+        echohl ErrorMsg | echomsg 'Compiled result is empty!' | echohl None
+    endif
+
+    let verbose = has_key(opts, 'verbose') && opts.verbose
+    if verbose | echo 'Running generated Vim script...' | endif
+    call s:run_vimscript(result.lines)
 endfunction
