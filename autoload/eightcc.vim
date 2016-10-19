@@ -1,5 +1,3 @@
-let s:TARGET = map(split("vim\n", '\zs'), 'char2nr(v:val)')
-
 function! eightcc#compile(...) abort
     let opts = a:0 > 0 ? a:1 : {}
     let opts = extend({
@@ -36,11 +34,14 @@ function! eightcc#compile(...) abort
     if debug | let g:eightcc#__debug.frontend = frontend | endif
     if verbose | echo 'Compiling EIR into Vim script...' | endif
 
+    let target = has_key(a:config, 'target') ? a:config.target : 'vim'
+    let input = map(split(target . "\n", '\zs'), 'char2nr(v:val)') + frontend.output
+
     let backend = eightcc#backend#create()
     let started = reltime()
     call backend.run({
         \ 'input_type': 'direct',
-        \ 'input': s:TARGET + frontend.output,
+        \ 'input': input,
         \ 'output_type': opts.output_type,
         \ })
     let spent = reltimestr(reltime(started, reltime()))
