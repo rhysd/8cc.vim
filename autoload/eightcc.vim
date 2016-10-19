@@ -1,21 +1,48 @@
+function! s:read_file(file) abort
+    let opts = a:0 > 0 ? a:1 : {}
+
+    try
+        let saved_bin = &binary
+        set binary
+        let lines = readfile(a:file, 'b')
+    finally
+        let &binary = saved_bin
+    endtry
+
+    return map(split(join(lines, "\n"), '\zs'), 'char2nr(v:val)')
+endfunction
+
+" TODO:
+" Split running frontend and backend into functions
 function! eightcc#compile(...) abort
     let opts = a:0 > 0 ? a:1 : {}
     let opts = extend({
                 \ 'input_type': 'buffer',
                 \ 'output_type': 'buffer',
                 \ }, opts)
+
+    if opts.input_type ==# 'file'
+        let opts.input = s:read_file(opts.file)
+        let opts.input_type = 'direct'
+    endif
+
     let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
     let debug = has_key(opts, '__debug')
 
     if verbose | echo 'Compiling C into EIR...' | endif
     if debug | let g:eightcc#__debug = {'config': opts} | endif
 
-    let frontend = eightcc#frontend#create()
-    let started = reltime()
-    call frontend.run({
+    let frontend_opts = {
         \ 'input_type': opts.input_type,
         \ 'output_type': 'direct'
-        \ })
+        \ }
+    if has_key(opts, 'input')
+        let frontend_opts.input = opts.input
+    endif
+
+    let frontend = eightcc#frontend#create()
+    let started = reltime()
+    call frontend.run(frontend_opts)
     let spent = reltimestr(reltime(started, reltime()))
 
     if has_key(frontend, 'lines') &&
