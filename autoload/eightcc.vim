@@ -9,7 +9,7 @@ function! eightcc#compile(...) abort
     let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
     let debug = has_key(opts, '__debug')
 
-    if verbose | echo 'Compiling to EIR...' | endif
+    if verbose | echo 'Compiling C into EIR...' | endif
     if debug | let g:eightcc#__debug = {'config': opts} | endif
 
     let frontend = eightcc#frontend#create()
@@ -30,11 +30,11 @@ function! eightcc#compile(...) abort
         echohl None
         return 1
     endif
-    if verbose | echo 'Compiling to EIR: Success: ' . spent . 's' | endif
+    if verbose | echo 'Compiling C into EIR: Success: ' . spent . 's' | endif
     if debug | let g:eightcc#__debug.spent_on_frontend =  spent | endif
 
     if debug | let g:eightcc#__debug.frontend = frontend | endif
-    if verbose | echo 'Compiling to Vim script...' | endif
+    if verbose | echo 'Compiling EIR into Vim script...' | endif
 
     let backend = eightcc#backend#create()
     let started = reltime()
@@ -45,7 +45,7 @@ function! eightcc#compile(...) abort
         \ })
     let spent = reltimestr(reltime(started, reltime()))
 
-    if verbose | echo 'Compiling to Vim script: Success: ' . spent . 's' | endif
+    if verbose | echo 'Compiling EIR into Vim script: Success: ' . spent . 's' | endif
     if debug | let g:eightcc#__debug.spent_on_backend =  spent | endif
     if debug | let g:eightcc#__debug.backend = backend | endif
 
