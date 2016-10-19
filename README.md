@@ -19,8 +19,10 @@ Now 8cc.vim is written in pure Vim script. 8cc.vim consists of frontend (customi
 It can compile C code into Vim script. And of course Vim can evaluate the generated Vim script code.
 
 Note that this is a toy project. 8cc.vim is much much slower.
-It takes 824 (frontend: 430 + backend: 396) seconds to compile the simplest `putchar()` program.
+It takes 824 (frontend: 430 + backend: 396) seconds to compile the simplest `putchar()` program on MacBook Pro Early 2015 (2.7 GHz Intel Core i5).
 But actually it works!
+
+As VM runs on Vim script, 8cc.vim works on Linux, OS X and (hopefully) Windows.
 
 ## Usage
 
