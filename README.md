@@ -37,8 +37,8 @@ Or please use your favorite plugin manager ([vim-plug](https://github.com/junegu
   - `:EccCompile`
   - `:EccRun`
 - Functions
-  - `eightcc#compile`
-  - `eightcc#run`
+  - `eightcc#compile()`
+  - `eightcc#run()`
 
 ## Compile C Code
 
