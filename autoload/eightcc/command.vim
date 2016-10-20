@@ -57,12 +57,33 @@ function! s:convert_to_opts(parsed) abort
     return ret
 endfunction
 
+function! s:should_cancel(parsed) abort
+    if has_key(a:parsed, 'help')
+        return 1
+    endif
+
+    if len(a:parsed.__unknown_args__) > 0
+        echohl ErrorMsg
+        echom 'Unknown options ' . join(map(a:parsed.__unknown_args__, 'string(v:val)'), ', ') . '. Please try --help option.'
+        echohl None
+        return 1
+    endif
+
+    return 0
+endfunction
+
 function! eightcc#command#compile(qargs, count, qbang) abort
     let parsed = s:parser.parse(a:qargs, a:count, a:qbang)
+    if s:should_cancel(parsed)
+        return
+    endif
     call eightcc#compile(s:convert_to_opts(parsed))
 endfunction
 
 function! eightcc#command#run(qargs, count, qbang) abort
     let parsed = s:parser.parse(a:qargs, a:count, a:qbang)
+    if s:should_cancel(parsed)
+        return
+    endif
     call eightcc#run(s:convert_to_opts(parsed))
 endfunction
