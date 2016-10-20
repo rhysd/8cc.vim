@@ -7,22 +7,21 @@ function s:debug(info) abort
     let g:eightcc#__debug = extend(get(g:, 'eightcc#__debug', {}), a:info)
 endfunction
 
-function! eightcc#frontend(...) abort
-    let opts = a:0 > 0 ? a:1 : {}
-    let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
-    let debug = has_key(opts, '__debug')
+function! s:frontend(opts) abort
+    let verbose = has_key(a:opts, 'verbose') && a:opts.verbose && a:opts.output_type !=# 'echo'
+    let debug = has_key(a:opts, '__debug')
 
-    if has_key(opts, 'lang') && opts.lang ==# 'eir'
+    if has_key(a:opts, 'lang') && a:opts.lang ==# 'eir'
         " Note: Fronend compiles into EIR. Nothing to do.
         return {}
     endif
 
-    if debug | call s:debug({'frontend_config': opts}) | endif
+    if debug | call s:debug({'frontend_config': a:opts}) | endif
     if verbose | echo 'Compiling C into EIR...' | endif
 
     let frontend = eightcc#frontend#create()
     let started = reltime()
-    call frontend.run(opts)
+    call frontend.run(a:opts)
 
     let spent = reltimestr(reltime(started, reltime()))
     if debug | call s:debug({'spent_on_frontend': spent}) | endif
@@ -44,19 +43,18 @@ function! eightcc#frontend(...) abort
     return frontend
 endfunction
 
-function! eightcc#backend(...) abort
-    let opts = a:0 > 0 ? a:1 : {}
-    let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
-    let debug = has_key(opts, '__debug')
+function! s:backend(opts) abort
+    let verbose = has_key(a:opts, 'verbose') && a:opts.verbose && a:opts.output_type !=# 'echo'
+    let debug = has_key(a:opts, '__debug')
 
     " Note:
     " If 'target' is not specified, it assumes that target is already
     " specified in the first line of input.
-    if has_key(opts, 'input') && has_key(opts, 'target')
-        let opts.input = map(split(opts.target . "\n", '\zs'), 'char2nr(v:val)') + opts.input
+    if has_key(a:opts, 'input') && has_key(a:opts, 'target')
+        let a:opts.input = map(split(a:opts.target . "\n", '\zs'), 'char2nr(v:val)') + a:opts.input
     endif
 
-    if debug | call s:debug({'backend_config': opts}) | endif
+    if debug | call s:debug({'backend_config': a:opts}) | endif
     if verbose | echo 'Compiling eir into target...' | endif
 
     let backend = eightcc#backend#create()
@@ -67,7 +65,7 @@ function! eightcc#backend(...) abort
         let saved_bin = &binary
         set binary
         let started = reltime()
-        call backend.run(opts)
+        call backend.run(a:opts)
         let spent = reltimestr(reltime(started, reltime()))
     finally
         let &binary = saved_bin
@@ -99,10 +97,10 @@ function! eightcc#compile(...) abort
     let g:eightcc#__debug = {}
 
     if opts.lang ==# 'eir'
-        return eightcc#backend(opts)
+        return s:backend(opts)
     endif
 
-    let frontend = eightcc#frontend(
+    let frontend = s:frontend(
             \ extend(copy(opts), {'output_type': 'direct'})
             \ )
 
@@ -111,7 +109,7 @@ function! eightcc#compile(...) abort
         return frontend
     endif
 
-    return eightcc#backend(
+    return s:backend(
             \ extend(copy(opts), {
             \ 'input_type': 'direct',
             \ 'input': frontend.output,
