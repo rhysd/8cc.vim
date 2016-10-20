@@ -1,0 +1,3 @@
+let g:repo_root = fnamemodify(expand('<sfile>'), ':h:h')
+call themis#option('exclude', 'test/putchar.c')
+call themis#helper('command').with(themis#helper('assert'))

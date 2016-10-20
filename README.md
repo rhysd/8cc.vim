@@ -71,7 +71,7 @@ The `SetupVM()` function creates a VM instance.
 :call vm.run()
 ```
 
-![result screen shot]()
+![result screen shot](https://raw.githubusercontent.com/rhysd/ss/master/8cc.vim/hello.png)
 
 If you want to see only the result of running Vim script, you can use `:EccRun` to skip above process.
 

@@ -1,0 +1,24 @@
+Describe :EccCompile
+    Before all
+        execute 'edit' g:repo_root . '/putchar.c'
+    End
+
+    It compiles C code to Vim script
+        EccCompile --buffer --verbose --debug
+
+        Assert True(exists('g:eightcc#__debug'))
+        Assert HasKey(g:eightcc#__debug, 'frontend')
+        Assert HasKey(g:eightcc#__debug, 'backend')
+        Assert NotEquals(len(g:eightcc#__debug.frontend.output), 0)
+        Assert NotEquals(len(g:eightcc#__debug.backend.output), 0)
+        Assert True(&modified)
+
+        write! result.vim
+        source result.vim
+        redir => g:script_output
+            let vm = SetupVM()
+            call vm.run()
+        redir END
+        Assert NotEquals(index(g:script_output, 'X'), -1)
+    End
+End
