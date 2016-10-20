@@ -1,5 +1,6 @@
 8cc.vim: Pure Vim script C Compiler
 ===================================
+[![Build Status](https://travis-ci.org/rhysd/8cc.vim.svg?branch=master)](https://travis-ci.org/rhysd/8cc.vim)
 
 This is a Vim script port of [8cc](https://github.com/rui314/8cc) built on [ELVM](https://github.com/shinh/elvm).
 In other words, this is a complete C compiler written in Vim script.

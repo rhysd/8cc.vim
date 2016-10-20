@@ -1,6 +1,6 @@
 Describe :EccCompile
-    Before all
-        execute 'edit' g:repo_root . '/putchar.c'
+    Before
+        execute 'edit' g:repo_root . '/test/putchar.c'
     End
 
     It compiles C code to Vim script

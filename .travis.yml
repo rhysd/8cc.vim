@@ -1,0 +1,10 @@
+language: python
+install:
+    - git clone https://github.com/thinca/vim-themis && (cd vim-themis && git show HEAD)
+    - pip install vim-vint
+before_script:
+    - uname -a
+    - vim --version
+script:
+    - vint --error --warning autoload/eightcc.vim autoload/eightcc/command.vim plugin/eightcc.vim --color
+    - ./vim-themis/bin/themis test/
