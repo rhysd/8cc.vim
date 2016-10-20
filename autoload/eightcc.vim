@@ -3,6 +3,10 @@ function! s:read_file(file) abort
     return map(split(join(lines, "\n"), '\zs'), 'char2nr(v:val)')
 endfunction
 
+function s:debug(info) abort
+    let g:eightcc#__debug = extend(get(g:, 'eightcc#__debug', {}), a:info)
+endfunction
+
 function! eightcc#frontend(...) abort
     let opts = a:0 > 0 ? a:1 : {}
     let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
@@ -13,15 +17,15 @@ function! eightcc#frontend(...) abort
         return {}
     endif
 
-    if debug | let g:eightcc#__debug.frontend_config = opts | endif
-    if verbose | echo printf('Compiling C into EIR...') | endif
+    if debug | call s:debug({'frontend_config': opts}) | endif
+    if verbose | echo 'Compiling C into EIR...' | endif
 
     let frontend = eightcc#frontend#create()
     let started = reltime()
     call frontend.run(opts)
 
     let spent = reltimestr(reltime(started, reltime()))
-    if debug | let g:eightcc#__debug.spent_on_frontend =  spent | endif
+    if debug | call s:debug({'spent_on_frontend': spent}) | endif
 
     if has_key(frontend, 'lines') &&
         \ len(frontend.lines) > 0 &&
@@ -35,7 +39,7 @@ function! eightcc#frontend(...) abort
     endif
 
     if verbose | echo 'Compiling C into EIR: Success: ' . spent . 's' | endif
-    if debug | let g:eightcc#__debug.frontend = frontend | endif
+    if debug | call s:debug({'frontend': frontend}) | endif
 
     return frontend
 endfunction
@@ -52,8 +56,8 @@ function! eightcc#backend(...) abort
         let opts.input = map(split(opts.target . "\n", '\zs'), 'char2nr(v:val)') + opts.input
     endif
 
-    if debug | let g:eightcc#__debug.backend_config = opts | endif
-    if verbose | echo 'Compiling eir into Vim script...' | endif
+    if debug | call s:debug({'backend_config': opts}) | endif
+    if verbose | echo 'Compiling eir into target...' | endif
 
     let backend = eightcc#backend#create()
     try
@@ -69,11 +73,10 @@ function! eightcc#backend(...) abort
         let &binary = saved_bin
     endtry
 
-    if verbose | echo 'Compiling EIR into Vim script: Success: ' . spent . 's' | endif
+    if verbose | echo 'Compiling EIR into target: Success: ' . spent . 's' | endif
 
     if debug
-        let g:eightcc#__debug.spent_on_backend = spent
-        let g:eightcc#__debug.backend = backend
+        call s:debug({'spent_on_backend': spent, 'backend': backend})
     endif
 
     return backend
@@ -93,7 +96,6 @@ function! eightcc#compile(...) abort
         let opts.input_type = 'direct'
     endif
 
-    " XXX
     let g:eightcc#__debug = {}
 
     if opts.lang ==# 'eir'
@@ -120,7 +122,7 @@ endfunction
 function s:run_vimscript(lines, debug) abort
     let f = tempname()
     call writefile(a:lines, f, 'b')
-    if a:debug | let g:eightcc#__debug.script = f | endif
+    if a:debug | call s:debug({'generated_script': f}) | endif
     try
         execute 'source' f
         let vm = SetupVM()
