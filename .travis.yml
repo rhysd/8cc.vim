@@ -7,4 +7,5 @@ before_script:
     - vim --version
 script:
     - vint --error --warning autoload/eightcc.vim autoload/eightcc/command.vim plugin/eightcc.vim --color
-    - ./vim-themis/bin/themis test/
+    - count=0; while true; do echo "${count} minutes..."; count=$(expr $count + 1); sleep 60; done &
+    - time ./vim-themis/bin/themis test/
