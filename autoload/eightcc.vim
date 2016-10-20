@@ -7,8 +7,25 @@ function s:debug(info) abort
     let g:eightcc#__debug = extend(get(g:, 'eightcc#__debug', {}), a:info)
 endfunction
 
+function s:getopts(args) abort
+    if len(a:args) == 0
+        return {}
+    endif
+
+    let opts = a:args[0]
+
+    if has_key(opts, 'input_type') &&
+            \ opts.input_type ==# 'file' &&
+            \ has_key(opts, 'file')
+        let opts.input = s:read_file(opts.file)
+        let opts.input_type = 'direct'
+    endif
+
+    return opts
+endfunction
+
 function! eightcc#frontend(...) abort
-    let opts = a:0 > 0 ? a:1 : {}
+    let opts = s:getopts(a:000)
     let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
     let debug = has_key(opts, '__debug')
 
@@ -45,7 +62,7 @@ function! eightcc#frontend(...) abort
 endfunction
 
 function! eightcc#backend(...) abort
-    let opts = a:0 > 0 ? a:1 : {}
+    let opts = s:getopts(a:000)
     let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
     let debug = has_key(opts, '__debug')
 
@@ -83,18 +100,12 @@ function! eightcc#backend(...) abort
 endfunction
 
 function! eightcc#compile(...) abort
-    let opts = a:0 > 0 ? a:1 : {}
     let opts = extend({
                 \ 'input_type': 'buffer',
                 \ 'output_type': 'buffer',
                 \ 'lang': 'c',
                 \ 'target': 'vim',
-                \ }, opts)
-
-    if opts.input_type ==# 'file'
-        let opts.input = s:read_file(opts.file)
-        let opts.input_type = 'direct'
-    endif
+                \ }, s:getopts(a:000))
 
     let g:eightcc#__debug = {}
 
