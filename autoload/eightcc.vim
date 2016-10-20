@@ -3,38 +3,25 @@ function! s:read_file(file) abort
     return map(split(join(lines, "\n"), '\zs'), 'char2nr(v:val)')
 endfunction
 
-" TODO:
-" Split running frontend and backend into functions
-function! eightcc#compile(...) abort
+function! eightcc#frontend(...) abort
     let opts = a:0 > 0 ? a:1 : {}
-    let opts = extend({
-                \ 'input_type': 'buffer',
-                \ 'output_type': 'buffer',
-                \ }, opts)
-
-    if opts.input_type ==# 'file'
-        let opts.input = s:read_file(opts.file)
-        let opts.input_type = 'direct'
-    endif
-
     let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
     let debug = has_key(opts, '__debug')
 
-    if verbose | echo 'Compiling C into EIR...' | endif
-    if debug | let g:eightcc#__debug = {'config': opts} | endif
-
-    let frontend_opts = {
-        \ 'input_type': opts.input_type,
-        \ 'output_type': 'direct'
-        \ }
-    if has_key(opts, 'input')
-        let frontend_opts.input = opts.input
+    if has_key(opts, 'lang') && opts.lang ==# 'eir'
+        " Note: Fronend compiles into EIR. Nothing to do.
+        return {}
     endif
+
+    if debug | let g:eightcc#__debug.frontend_config = opts | endif
+    if verbose | echo printf('Compiling C into EIR...') | endif
 
     let frontend = eightcc#frontend#create()
     let started = reltime()
-    call frontend.run(frontend_opts)
+    call frontend.run(opts)
+
     let spent = reltimestr(reltime(started, reltime()))
+    if debug | let g:eightcc#__debug.spent_on_frontend =  spent | endif
 
     if has_key(frontend, 'lines') &&
         \ len(frontend.lines) > 0 &&
@@ -44,37 +31,90 @@ function! eightcc#compile(...) abort
             echom l
         endfor
         echohl None
-        return 1
+        return {}
     endif
+
     if verbose | echo 'Compiling C into EIR: Success: ' . spent . 's' | endif
-    if debug | let g:eightcc#__debug.spent_on_frontend =  spent | endif
-
     if debug | let g:eightcc#__debug.frontend = frontend | endif
-    if verbose | echo 'Compiling EIR into Vim script...' | endif
 
-    let target = has_key(opts, 'target') ? opts.target : 'vim'
-    let input = map(split(target . "\n", '\zs'), 'char2nr(v:val)') + frontend.output
+    return frontend
+endfunction
+
+function! eightcc#backend(...) abort
+    let opts = a:0 > 0 ? a:1 : {}
+    let verbose = has_key(opts, 'verbose') && opts.verbose && opts.output_type !=# 'echo'
+    let debug = has_key(opts, '__debug')
+
+    " Note:
+    " If 'target' is not specified, it assumes that target is already
+    " specified in the first line of input.
+    if has_key(opts, 'input') && has_key(opts, 'target')
+        let opts.input = map(split(opts.target . "\n", '\zs'), 'char2nr(v:val)') + opts.input
+    endif
+
+    if debug | let g:eightcc#__debug.backend_config = opts | endif
+    if verbose | echo 'Compiling eir into Vim script...' | endif
 
     let backend = eightcc#backend#create()
     try
+        " Note:
+        " Execute in binary mode because backend.run() may write out its output
+        " to buffer.  Prevent automatically adding EOL to the end of buffer.
         let saved_bin = &binary
         set binary
         let started = reltime()
-        call backend.run({
-            \ 'input_type': 'direct',
-            \ 'input': input,
-            \ 'output_type': opts.output_type,
-            \ })
+        call backend.run(opts)
         let spent = reltimestr(reltime(started, reltime()))
     finally
         let &binary = saved_bin
     endtry
 
     if verbose | echo 'Compiling EIR into Vim script: Success: ' . spent . 's' | endif
-    if debug | let g:eightcc#__debug.spent_on_backend =  spent | endif
-    if debug | let g:eightcc#__debug.backend = backend | endif
+
+    if debug
+        let g:eightcc#__debug.spent_on_backend = spent
+        let g:eightcc#__debug.backend = backend
+    endif
 
     return backend
+endfunction
+
+function! eightcc#compile(...) abort
+    let opts = a:0 > 0 ? a:1 : {}
+    let opts = extend({
+                \ 'input_type': 'buffer',
+                \ 'output_type': 'buffer',
+                \ 'lang': 'c',
+                \ 'target': 'vim',
+                \ }, opts)
+
+    if opts.input_type ==# 'file'
+        let opts.input = s:read_file(opts.file)
+        let opts.input_type = 'direct'
+    endif
+
+    " XXX
+    let g:eightcc#__debug = {}
+
+    if opts.lang ==# 'eir'
+        return eightcc#backend(opts)
+    endif
+
+    let frontend = eightcc#frontend(
+            \ extend(copy(opts), {'output_type': 'direct'})
+            \ )
+
+    if empty(frontend)
+        " When failed
+        return frontend
+    endif
+
+    return eightcc#backend(
+            \ extend(copy(opts), {
+            \ 'input_type': 'direct',
+            \ 'input': frontend.output,
+            \ })
+        \ )
 endfunction
 
 function s:run_vimscript(lines, debug) abort
