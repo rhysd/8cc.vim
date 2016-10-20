@@ -19,6 +19,6 @@ Describe :EccCompile
             let vm = SetupVM()
             call vm.run()
         redir END
-        Assert NotEquals(index(g:script_output, 'X'), -1)
+        Assert NotEquals(stridx(g:script_output, 'X'), -1)
     End
 End
