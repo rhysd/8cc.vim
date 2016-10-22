@@ -9859,6 +9859,24 @@ function! s:c.init(config) dict abort
  endif
  let self.output = []
 endfunction
+function! s:c.exit() dict abort
+ if len(self.output) == 0 | return | endif
+ let lines = ['']
+ for ch in self.output
+  if ch == 10
+   let lines += ['']
+  else
+   let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
+  endif
+  unlet ch
+ endfor
+ if self.output_type ==# 'buffer'
+  new
+  call setline(1, lines)
+ endif
+ let self.lines = lines
+ return
+endfunction
 
 
 function! s:c.phase0() dict abort
@@ -12081,21 +12099,7 @@ function! s:c.phase0() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
    let self.sp = self.bp
@@ -12188,21 +12192,7 @@ function! s:c.phase0() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -13530,21 +13520,7 @@ function! s:c.phase0() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
    let self.sp = self.bp
@@ -16088,21 +16064,7 @@ function! s:c.phase0() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -18340,21 +18302,7 @@ function! s:c.phase0() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
    let self.sp = self.bp
@@ -18664,37 +18612,9 @@ function! s:c.phase0() dict abort
    let self.a = self.b
    let self.a = 0
    let self.b = self.a
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
 
   elseif self.pc == 454
@@ -18732,21 +18652,7 @@ function! s:c.phase0() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -22748,21 +22654,7 @@ function! s:c.phase1() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -29884,21 +29776,7 @@ function! s:c.phase2() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -31031,21 +30909,7 @@ function! s:c.phase2() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -31095,21 +30959,7 @@ function! s:c.phase2() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -37879,21 +37729,7 @@ function! s:c.phase3() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -37940,21 +37776,7 @@ function! s:c.phase3() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -38001,21 +37823,7 @@ function! s:c.phase3() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -38508,21 +38316,7 @@ function! s:c.phase3() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
    let self.sp = self.bp
@@ -49879,21 +49673,7 @@ function! s:c.phase4() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -50464,21 +50244,7 @@ function! s:c.phase4() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -50531,21 +50297,7 @@ function! s:c.phase4() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -56115,21 +55867,7 @@ function! s:c.phase5() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -58252,21 +57990,7 @@ function! s:c.phase5() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -59063,21 +58787,7 @@ function! s:c.phase5() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -59121,21 +58831,7 @@ function! s:c.phase5() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -59576,21 +59272,7 @@ function! s:c.phase6() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -59634,21 +59316,7 @@ function! s:c.phase6() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -59692,21 +59360,7 @@ function! s:c.phase6() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -61922,21 +61576,7 @@ function! s:c.phase6() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -81509,21 +81149,7 @@ function! s:c.phase8() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -98634,21 +98260,7 @@ function! s:c.phase11() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -109583,21 +109195,7 @@ function! s:c.phase12() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -109836,21 +109434,7 @@ function! s:c.phase12() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -110320,21 +109904,7 @@ function! s:c.phase12() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -110417,21 +109987,7 @@ function! s:c.phase12() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -110680,21 +110236,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -110872,21 +110414,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -110944,21 +110472,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -112252,21 +111766,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -113488,21 +112988,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -113655,21 +113141,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -114303,21 +113775,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -114410,21 +113868,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -115777,21 +115221,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -116739,21 +116169,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -117004,21 +116420,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -117590,21 +116992,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -117663,21 +117051,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -118202,21 +117576,7 @@ function! s:c.phase13() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -118426,21 +117786,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -119441,21 +118787,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -121419,21 +120751,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -124061,21 +123379,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -124130,21 +123434,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -124999,21 +124289,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -125616,21 +124892,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -125679,21 +124941,7 @@ function! s:c.phase14() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
@@ -127051,21 +126299,7 @@ function! s:c.phase15() dict abort
    let self.d = and((self.d + 16777215), 16777215)
    let self.mem[self.d] = self.a
    let self.sp = self.d
-   if len(self.output) == 0 | return 1 | endif
-   let lines = ['']
-   for ch in self.output
-    if ch == 10
-     let lines += ['']
-    else
-     let lines[len(lines)-1] .= nr2char(ch == 0 ? 10 : ch)
-    endif
-    unlet ch
-   endfor
-   if self.output_type ==# 'buffer'
-    new
-    call setline(1, lines)
-   endif
-   let self.lines = lines
+   call self.exit()
    return 1
    let self.sp = and((self.sp + 1), 16777215)
 
