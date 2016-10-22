@@ -8,8 +8,8 @@ In other words, this is a complete C compiler written in Vim script.
 [8cc](https://github.com/rui314/8cc) is a nicely-written small C compiler for x86_64 Linux. It's C11-aware and self-hosted.
 
 [ELVM](https://github.com/shinh/elvm) is a **E**so **L**ang **V**irtual **M**achine.
-ELVM customizes 8cc to emit its own intermediate representation, EIR as frontend.
-ELVM compiles C code into EIR via the frontend.  And then translates EIR into various targets (Python, Ruby, C,
+ELVM retargets 8cc to emit its own intermediate representation, EIR.
+ELVM compiles C code into EIR with the retargeted 8cc as frontend. And then translates EIR into various targets (Python, Ruby, C,
 BrainFxxk, Piet, Befunge, Emacs Lisp, ...) in backend. The architecture resembles LLVM.
 [This presentation](http://shinh.skr.jp/slide/elvm/000.html) is a good stuff to know ELVM architecture further (though in Japanese).
 
